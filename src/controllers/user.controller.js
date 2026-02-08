@@ -88,7 +88,44 @@ const register = asyncHandler(async (req, res, next) => {
   new ApiResponse(200, true, "User registered successfully", user).send(res);
 });
 
-const login = asyncHandler(async (req, res, next) => {});
+// & ---------------------login---------------------------
+
+const login = asyncHandler(async (req, res, next) => {
+  // Destructuring the necessary data from req object
+  const { email, password } = req.body;
+  // Check if the data is there or not, if not throw error message
+
+  if (!email || !password) {
+    return next(new ErrorHandler("Email and Password are required", 400));
+  }
+
+  // Finding the user with the sent email
+  const user = await UserCollection.findOne({ email }).select("+password");
+  // If no user or sent password do not match then send generic response
+  if (!(user && (await user.comparePassword(password)))) {
+    return next(
+      new ErrorHandler(
+        "Email or Password do not match or user does not exist",
+        400,
+      ),
+    );
+  }
+
+  // Generating a JWT token
+  const token = await user.generateJWTToken();
+
+  // Setting the password to undefined so it does not get sent in the response
+  user.password = undefined;
+
+  // Setting the token in the cookie with name token along with cookieOptions
+  res.cookie("token", token, cookieOptions);
+
+  // If all good send the response to the frontend
+  new ApiResponse(200, true, "User logged in successfully", user).send(res);
+});
+
+
+
 const logout = asyncHandler(async (req, res, next) => {});
 const getProfile = asyncHandler(async (req, res, next) => {});
 const forgotPassword = asyncHandler(async (req, res, next) => {});

@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { register } = require("../controllers/user.controller");
+const { register, login } = require("../controllers/user.controller");
 const upload = require("../middlewares/multer.middleware");
 
 const router = Router();
@@ -46,7 +46,36 @@ const router = Router();
  *         description: User registered successfully
  */
 
-
 router.post("/register", upload.single("avatar"), register);
+/**
+ * @swagger
+ * /api/v1/user/login:
+ *   post:
+ *     summary: Login user and generate JWT token
+ *     tags: [User]
+ *     security: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: chandan@gmail.com
+ *               password:
+ *                 type: string
+ *                 example: 123456
+ *     responses:
+ *       200:
+ *         description: User logged in successfully
+ *       401:
+ *         description: Invalid credentials
+ */
+router.post("/login", login);
 
 module.exports = router;
