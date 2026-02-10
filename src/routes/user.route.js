@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { register, login } = require("../controllers/user.controller");
+const { register, login, logout } = require("../controllers/user.controller");
 const upload = require("../middlewares/multer.middleware");
 
 const router = Router();
@@ -77,5 +77,37 @@ router.post("/register", upload.single("avatar"), register);
  *         description: Invalid credentials
  */
 router.post("/login", login);
+/**
+ * @swagger
+ * /api/v1/user/logout:
+ *   post:
+ *     summary: Logout user and clear JWT cookie
+ *     tags: [User]
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: User logged out successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: integer
+ *                   example: 200
+ *                 success:
+ *                   type: boolean
+ *                   example: true
+ *                 message:
+ *                   type: string
+ *                   example: User logged out successfully
+ *       401:
+ *         description: Unauthorized
+ */
+
+
+router.post("/logout", logout);
+
 
 module.exports = router;

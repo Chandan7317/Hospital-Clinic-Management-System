@@ -88,7 +88,7 @@ const register = asyncHandler(async (req, res, next) => {
   new ApiResponse(200, true, "User registered successfully", user).send(res);
 });
 
-// & ---------------------login---------------------------
+// & ---------------------login-----------------------------
 
 const login = asyncHandler(async (req, res, next) => {
   // Destructuring the necessary data from req object
@@ -124,10 +124,23 @@ const login = asyncHandler(async (req, res, next) => {
   new ApiResponse(200, true, "User logged in successfully", user).send(res);
 });
 
+// & ---------------------logout-----------------------------
 
+const logout = asyncHandler(async (req, res, next) => {
+   // Setting the cookie value to null
+  res.cookie("token", null, {
+    secure: process.env.NODE_ENV === "production" ? true : false,
+    maxAge: 0,
+    httpOnly: true,
+  });
 
-const logout = asyncHandler(async (req, res, next) => {});
-const getProfile = asyncHandler(async (req, res, next) => {});
+  // Sending the response
+  new ApiResponse(200, true, "User logged out successfully").send(res);
+});
+
+const getProfile = asyncHandler(async (req, res, next) => {
+  
+});
 const forgotPassword = asyncHandler(async (req, res, next) => {});
 const updateUser = asyncHandler(async (req, res, next) => {});
 
