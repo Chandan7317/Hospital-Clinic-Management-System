@@ -23,7 +23,6 @@ const register = asyncHandler(async (req, res, next) => {
   const userExits = await UserCollection.findOne({ email });
   if (userExits) {
     return next(new ErrorHandler("email is already exits", 409));
-    
   }
 
   const user = await UserCollection.create({
@@ -127,7 +126,7 @@ const login = asyncHandler(async (req, res, next) => {
 // & ---------------------logout-----------------------------
 
 const logout = asyncHandler(async (req, res, next) => {
-   // Setting the cookie value to null
+  // Setting the cookie value to null
   res.cookie("token", null, {
     secure: process.env.NODE_ENV === "production" ? true : false,
     maxAge: 0,
@@ -138,9 +137,15 @@ const logout = asyncHandler(async (req, res, next) => {
   new ApiResponse(200, true, "User logged out successfully").send(res);
 });
 
+// & -----------------------getProfile---------------------------
+
 const getProfile = asyncHandler(async (req, res, next) => {
-  
+  // Finding the user using the id from modified req object
+  const userId = req.user.id;
+  const user = await UserCollection.findById(userId);
+  new ApiResponse(200, true, "User details", user).send(res);
 });
+
 const forgotPassword = asyncHandler(async (req, res, next) => {});
 const updateUser = asyncHandler(async (req, res, next) => {});
 

@@ -13,7 +13,17 @@ const options = {
         url: "http://localhost:9000",
       },
     ],
+    components: {
+      securitySchemes: {
+        cookieAuth: {
+          type: "apiKey",
+          in: "cookie",
+          name: "token",
+        },
+      },
+    },
   },
+
   apis: ["./src/routes/user.route.js"], // yaha routes folder ka path dena
 };
 

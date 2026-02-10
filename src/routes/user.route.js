@@ -1,6 +1,12 @@
 const { Router } = require("express");
-const { register, login, logout } = require("../controllers/user.controller");
+const {
+  register,
+  login,
+  logout,
+  getProfile,
+} = require("../controllers/user.controller");
 const upload = require("../middlewares/multer.middleware");
+const { isLoggedIn } = require("../middlewares/outh.middleware");
 
 const router = Router();
 
@@ -81,13 +87,30 @@ router.post("/login", login);
  * @swagger
  * /api/v1/user/logout:
  *   post:
- *     summary: Logout user and clear JWT cookie
+ *     summary: Logout user
  *     tags: [User]
  *     security:
  *       - cookieAuth: []
  *     responses:
  *       200:
  *         description: User logged out successfully
+ *       401:
+ *         description: Unauthorized
+ */
+
+router.post("/logout", logout);
+
+/**
+ * @swagger
+ * /api/v1/user/me:
+ *   get:
+ *     summary: Get logged-in user profile
+ *     tags: [User]
+ *     security:
+ *       - cookieAuth: []
+ *     responses:
+ *       200:
+ *         description: User details fetched successfully
  *         content:
  *           application/json:
  *             schema:
@@ -101,13 +124,8 @@ router.post("/login", login);
  *                   example: true
  *                 message:
  *                   type: string
- *                   example: User logged out successfully
- *       401:
- *         description: Unauthorized
+ *                   example: User details
  */
 
-
-router.post("/logout", logout);
-
-
+router.get("/me", isLoggedIn, getProfile);
 module.exports = router;
