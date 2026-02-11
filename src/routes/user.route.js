@@ -198,6 +198,31 @@ router.post("/reset", forgotPassword);
  */
 
 router.post("/reset/:resetToken", resetPassword);
+/**
+ * @swagger
+ * /api/v1/user/change-password:
+ *   post:
+ *     summary: Change password
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               oldPassword:
+ *                 type: string
+ *               newPassword:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Password changed successfully
+ *       400:
+ *         description: Invalid input
+ */
 
 router.post("/change-password", isLoggedIn, changePassword);
 

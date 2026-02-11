@@ -248,7 +248,50 @@ const resetPassword = asyncHandler(async (req, res, next) => {
   // Sending the response when everything goes good
   new ApiResponse(200, true, "Password changed successfully").send(res);
 });
-const changePassword = asyncHandler(async (req, res, next) => {});
+
+// &------------------------changePassword----------------------
+
+const changePassword = asyncHandler(async (req, res, next) => {
+  // Destructuring the necessary data from the req object
+  const { oldPassword, newPassword } = req.body;
+  const { id } = req.user; // because of the middleware isLoggedIn
+
+  // Check if the values are there or not
+  if (!oldPassword || !newPassword) {
+    return next(
+      new ErrorHandler("Old password and new password are required", 400),
+    );
+  }
+
+  // Finding the user by ID and selecting the password
+  const user = await UserCollection.findById(id).select("+password");
+
+  // If no user then throw an error message
+  if (!user) {
+    return next(
+      new ErrorHandler("Invalid user id or user does not exist", 400),
+    );
+  }
+
+  // Check if the old password is correct
+  const isPasswordValid = await user.comparePassword(oldPassword);
+
+  // If the old password is not valid then throw an error message
+  if (!isPasswordValid) {
+    return next(new ErrorHandler("Invalid old password", 400));
+  }
+
+  // Setting the new password
+  user.password = newPassword;
+
+  // Save the data in DB
+  await user.save();
+
+  // Setting the password undefined so that it won't get sent in the response
+  user.password = undefined;
+
+  new ApiResponse(200, true, "Password changed successfully").send(res);
+});
 const updateUser = asyncHandler(async (req, res, next) => {});
 
 module.exports = {
