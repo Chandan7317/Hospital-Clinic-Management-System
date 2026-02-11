@@ -4,6 +4,9 @@ const asyncHandler = require("express-async-handler");
 const ErrorHandler = require("../utils/ErrorHandler.utils");
 const ApiResponse = require("../utils/ApiResponse.utils");
 const UserCollection = require("../models/user.model");
+const sendEmail = require("../utils/sendEmail");
+const crypto = require("crypto");
+
 // ! cookieOptions
 const cookieOptions = {
   secure: process.env.NODE_ENV === "production" ? true : false,
@@ -146,7 +149,57 @@ const getProfile = asyncHandler(async (req, res, next) => {
   new ApiResponse(200, true, "User details", user).send(res);
 });
 
-const forgotPassword = asyncHandler(async (req, res, next) => {});
+const forgotPassword = asyncHandler(async (req, res, next) => {
+  // Extracting email from request body
+  const { email } = req.body;
+  // If no email send email required message
+  if (!email) {
+    return next(new ErrorHandler("Email is require", 400));
+  }
+
+  // Finding the user via email
+  const user = await UserCollection.findOne({ email });
+  // If no email found send the message email not found
+  if (!user) {
+    return next(new ErrorHandler("Email not reqistered", 404));
+  }
+
+  // Generating the reset token via the method we have in user model
+  const resetToken = await user.generatePasswardResetToken();
+
+  // Saving the forgotPassword* to DB
+  await user.save();
+
+  // constructing a url to send the correct data
+  const resetPasswordUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
+  console.log("resetPasswordUrl", resetPasswordUrl);
+
+  // We here need to send an email to the user with the token
+  const subject = "Reset Password";
+  const message = `You can reset your Password by clicking <a href=${resetPasswordUrl} target="_blank">Reset Your Password</a>\n If the above link does not work for some reason then copy paste this link in new tab ${resetPasswordUrl}.\n If you have not requested this ,Kindly ignore.`;
+
+  try {
+    await sendEmail(email, subject, message);
+
+    // If email sent successfully send the success response
+    new ApiResponse(
+      200,
+      true,
+      `Reset password token has been sent to ${email} successfully`,
+    ).send(res);
+  } catch (error) {
+    // If some error happened we need to clear the forgotPassword* fields in our DB
+    user.forgotPasswordToken = undefined;
+    user.forgotPasswordExpiry = undefined;
+
+    await user.save();
+    new ErrorHandler(
+      error.message || "Something went wrong, please try again.",
+      500,
+    );
+  }
+});
+
 const updateUser = asyncHandler(async (req, res, next) => {});
 
 module.exports = {

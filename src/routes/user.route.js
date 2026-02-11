@@ -4,6 +4,7 @@ const {
   login,
   logout,
   getProfile,
+  forgotPassword,
 } = require("../controllers/user.controller");
 const upload = require("../middlewares/multer.middleware");
 const { isLoggedIn } = require("../middlewares/outh.middleware");
@@ -128,4 +129,35 @@ router.post("/logout", logout);
  */
 
 router.get("/me", isLoggedIn, getProfile);
+/**
+ * @swagger
+ * /api/v1/user/reset:
+ *   post:
+ *     summary: Send password reset email
+ *     tags: [User]
+ *     security: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: user@example.com
+ *     responses:
+ *       200:
+ *         description: Reset password email sent successfully
+ *       400:
+ *         description: Email is required
+ *       404:
+ *         description: Email not registered
+ *       500:
+ *         description: Internal server error
+ */
+
+router.post("/reset", forgotPassword);
 module.exports = router;
