@@ -149,6 +149,8 @@ const getProfile = asyncHandler(async (req, res, next) => {
   new ApiResponse(200, true, "User details", user).send(res);
 });
 
+// &------------------------forgotPassword----------------------
+
 const forgotPassword = asyncHandler(async (req, res, next) => {
   // Extracting email from request body
   const { email } = req.body;
@@ -200,6 +202,53 @@ const forgotPassword = asyncHandler(async (req, res, next) => {
   }
 });
 
+// &------------------------resetPassword----------------------
+
+const resetPassword = asyncHandler(async (req, res, next) => {
+  // Extracting resetToken from req.params object
+  const { resetToken } = req.params;
+  // Extracting password from req.body object
+  const { password } = req.body;
+  // We are again hashing the resetToken using sha256 since we have stored our resetToken in DB using the same algorithm
+  const forgotPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  // Check if password is not there then send response saying password is required
+  if (!password) {
+    return next(new ErrorHandler("Password is required", 400));
+  }
+  console.log("jhgjhg", forgotPasswordToken);
+
+  // Checking if token matches in DB and if it is still valid(Not expired)
+  const user = await UserCollection.findOne({
+    forgotPasswordToken,
+    forgotPasswordExpiry: { $gt: Date.now() }, // $gt will help us check for greater than value, with this we can check if token is valid or expired
+  });
+
+  // If not found or expired send the response
+  if (!user) {
+    return next(
+      new ErrorHandler("Token is invalid or expired, please try again", 400),
+    );
+  }
+
+  // Update the password if token is valid and not expired
+  user.password = password;
+
+  // making forgotPassword* valus undefined in the DB
+  user.forgotPasswordExpiry = undefined;
+  user.forgotPasswordToken = undefined;
+
+  // Saving the updated user values
+
+  await user.save();
+
+  // Sending the response when everything goes good
+  new ApiResponse(200, true, "Password changed successfully").send(res);
+});
+const changePassword = asyncHandler(async (req, res, next) => {});
 const updateUser = asyncHandler(async (req, res, next) => {});
 
 module.exports = {
@@ -208,5 +257,7 @@ module.exports = {
   logout,
   getProfile,
   forgotPassword,
+  resetPassword,
+  changePassword,
   updateUser,
 };

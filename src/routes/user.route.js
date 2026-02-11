@@ -5,6 +5,8 @@ const {
   logout,
   getProfile,
   forgotPassword,
+  resetPassword,
+  changePassword,
 } = require("../controllers/user.controller");
 const upload = require("../middlewares/multer.middleware");
 const { isLoggedIn } = require("../middlewares/outh.middleware");
@@ -160,4 +162,43 @@ router.get("/me", isLoggedIn, getProfile);
  */
 
 router.post("/reset", forgotPassword);
+/**
+ * @swagger
+ * /api/v1/user/reset/{resetToken}:
+ *   post:
+ *     summary: Reset user password using reset token
+ *     tags: [User]
+ *     security: []
+ *     parameters:
+ *       - in: path
+ *         name: resetToken
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: Password reset token sent to user's email
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - password
+ *             properties:
+ *               password:
+ *                 type: string
+ *                 example: NewPassword123
+ *     responses:
+ *       200:
+ *         description: Password changed successfully
+ *       400:
+ *         description: Password is required or token is invalid/expired
+ *       500:
+ *         description: Internal server error
+ */
+
+router.post("/reset/:resetToken", resetPassword);
+
+router.post("/change-password", isLoggedIn, changePassword);
+
 module.exports = router;
