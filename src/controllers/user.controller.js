@@ -292,7 +292,61 @@ const changePassword = asyncHandler(async (req, res, next) => {
 
   new ApiResponse(200, true, "Password changed successfully").send(res);
 });
-const updateUser = asyncHandler(async (req, res, next) => {});
+
+// &------------------------updateUser----------------------
+
+const updateUser = asyncHandler(async (req, res, next) => {
+   // Destructuring the necessary data from the req object
+  const { fullName } = req.body;
+  const { id } = req.params;
+
+  const user = await UserCollection.findById(id);
+
+  if (!user) {
+    return next(
+      new ErrorHandler("Invalid user id or user does not exist", 400),
+    );
+  }
+
+  if (fullName) {
+    user.fullName = fullName;
+  }
+
+  // Run only if user sends a file
+  if (req.file) {
+    // Deletes the old image uploaded by the user
+    await cloudinary.v2.uploader.destroy(user.avatar.public_id);
+
+    try {
+      const result = await cloudinary.v2.uploader.upload(req.file.path, {
+        folder: "lms", // Save files in a folder named lms
+        width: 250,
+        height: 250,
+        gravity: "faces",
+        crop: "fill",
+      });
+
+      //if success
+      if (result) {
+        // Set the public_id and secure_url in DB
+        user.avatar.public_id = result.public_id;
+        user.avatar.secure_url = result.secure_url;
+
+        // After successful upload remove the file from local storage
+        fs.rm(`uploads/${req.file.filename}`);
+      }
+    } catch (error) {
+      return next(
+        new ErrorHandler(error || "File not uploaded, please try again", 400),
+      );
+    }
+  }
+
+  //save the user object
+  await user.save();
+
+  new ApiResponse(200, true, "User details updated successfully").send(res);
+});
 
 module.exports = {
   register,

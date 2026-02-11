@@ -7,6 +7,7 @@ const {
   forgotPassword,
   resetPassword,
   changePassword,
+  updateUser,
 } = require("../controllers/user.controller");
 const upload = require("../middlewares/multer.middleware");
 const { isLoggedIn } = require("../middlewares/outh.middleware");
@@ -225,5 +226,41 @@ router.post("/reset/:resetToken", resetPassword);
  */
 
 router.post("/change-password", isLoggedIn, changePassword);
+/**
+ * @swagger
+ * /api/v1/user/update/{id}:
+ *   put:
+ *     summary: Update user details
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: User ID
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         multipart/form-data:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               fullName:
+ *                 type: string
+ *               avatar:
+ *                 type: string
+ *                 format: binary
+ *     responses:
+ *       200:
+ *         description: User details updated successfully
+ *       400:
+ *         description: Invalid user id or file upload error
+ *       401:
+ *         description: Unauthorized
+ */
+router.put("/update/:id", isLoggedIn, upload.single("avatar"), updateUser);
 
 module.exports = router;
