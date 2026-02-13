@@ -1,11 +1,12 @@
 require("dotenv").config();
 const express = require("express");
-const userRouter = require("./src/routes/user.route");
 const errorMiddleware = require("./src/middlewares/error.middleware");
 const swaggerUi = require("swagger-ui-express");
 const swaggerSpec = require("./src/config/swagger");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
+const userRouter = require("./src/routes/user.route");
+const doctorRoute = require("./src/routes/doctor.route");
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 //& api routes
 app.use("/api/v1/user", userRouter);
+app.use("/api/v1/doctor", doctorRoute);
 
 //& ─── error middleware ───────────────────────────────────────────────────────────────────
 app.use(errorMiddleware);

@@ -24,7 +24,8 @@ const options = {
     },
   },
 
-  apis: ["./src/routes/user.route.js"], // yaha routes folder ka path dena
+  apis: ["./src/routes/user.route.js" ,"./src/routes/doctor.route.js"], // yaha routes folder ka path dena
+  
 };
 
 const swaggerSpec = swaggerJsDoc(options);
