@@ -1,5 +1,8 @@
 const { Router } = require("express");
-const { createDoctor } = require("../controllers/doctor.controller");
+const {
+  createDoctor,
+  getAllDoctor,
+} = require("../controllers/doctor.controller");
 
 const router = Router();
 
@@ -56,5 +59,18 @@ const router = Router();
  *         description: Internal server error
  */
 router.post("/createDoctor", createDoctor);
+/**
+ * @swagger
+ * /api/v1/doctor/getAllDoctor:
+ *   get:
+ *     summary: Get all doctors
+ *     tags: [Doctor]
+ *     responses:
+ *       200:
+ *         description: Successfully fetched all doctors
+ *       500:
+ *         description: Server error
+ */
+router.get("/getAllDoctor", getAllDoctor);
 
 module.exports = router;

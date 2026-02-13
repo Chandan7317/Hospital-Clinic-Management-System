@@ -50,7 +50,22 @@ const createDoctor = asyncHandler(async (req, res, next) => {
 
 // & -----------------------------getAllDoctor-----------------------------
 // Get All Doctors (Public)
-const getAllDoctor = asyncHandler(async (req, res, next) => {});
+const getAllDoctor = asyncHandler(async (req, res, next) => {
+  try {
+    const doctors = await DoctorCollection.find().populate(
+      "user",
+      "fullName email avatar role",
+    );
+
+    res.json({
+      success: true,
+      doctors,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 //Get Single Doctor
 const getDoctorById = asyncHandler(async (req, res, next) => {});
 // Update Doctor Profile (Doctor himself)
