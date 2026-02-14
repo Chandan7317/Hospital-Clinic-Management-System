@@ -38,7 +38,7 @@ const createDoctor = asyncHandler(async (req, res, next) => {
       bio,
     });
 
-    res.status(201).json({
+    res.status(200).json({
       success: true,
       message: "Doctor profile created",
       doctor,
@@ -57,7 +57,7 @@ const getAllDoctor = asyncHandler(async (req, res, next) => {
       "fullName email avatar role",
     );
 
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Fetch all Doctor Successfully",
       doctors,
@@ -83,7 +83,7 @@ const getDoctorById = asyncHandler(async (req, res, next) => {
       });
     }
 
-    res.json({
+    res.status(200).json({
       success: true,
       message: "Fetch Single Doctor Successfully",
       doctor,
@@ -92,8 +92,47 @@ const getDoctorById = asyncHandler(async (req, res, next) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+// & -----------------------------updateDoctorProfile-----------------------------
+
 // Update Doctor Profile (Doctor himself)
-const updateDoctorProfile = asyncHandler(async (req, res, next) => {});
+const updateDoctorProfile = asyncHandler(async (req, res, next) => {
+  try {
+    const doctor = await DoctorCollection.findOne({ user: req.user.id });
+    console.log("Logged In User ID:", req.user.id);
+
+    if (!doctor) {
+      return res.status(404).json({
+        success: false,
+        message: "Doctor profile not found",
+      });
+    }
+
+    const allowedFields = [
+      "specialization",
+      "experience",
+      "consultationFee",
+      "qualification",
+      "bio",
+    ];
+
+    // Update only allowed fields
+    allowedFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        doctor[field] = req.body[field];
+      }
+    });
+    await doctor.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      doctor,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 const DeleteDoctor = asyncHandler(async (req, res, next) => {});
 

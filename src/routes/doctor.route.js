@@ -3,7 +3,12 @@ const {
   createDoctor,
   getAllDoctor,
   getDoctorById,
+  updateDoctorProfile,
 } = require("../controllers/doctor.controller");
+const {
+  isLoggedIn,
+  authorizeRoles,
+} = require("../middlewares/outh.middleware");
 
 const router = Router();
 
@@ -59,7 +64,7 @@ const router = Router();
  *       500:
  *         description: Internal server error
  */
-router.post("/createDoctor", createDoctor);
+router.post("/createDoctor", isLoggedIn, authorizeRoles("ADMIN"), createDoctor);
 /**
  * @swagger
  * /api/v1/doctor/getAllDoctor:
@@ -97,5 +102,56 @@ router.get("/getAllDoctor", getAllDoctor);
  */
 
 router.get("/getSingleDoctor/:id", getDoctorById);
+/**
+ * @swagger
+ * /api/v1/doctor/update/{id}:
+ *   put:
+ *     summary: Update doctor profile
+ *     tags: [Doctor]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Doctor ID
+ *         schema:
+ *           type: string
+ *           example: 65abc1234567890abcdef123
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               specialization:
+ *                 type: string
+ *                 example: Cardiologist
+ *               experience:
+ *                 type: number
+ *                 example: 6
+ *               consultationFee:
+ *                 type: number
+ *                 example: 800
+ *               qualification:
+ *                 type: string
+ *                 example: MBBS, MD
+ *               bio:
+ *                 type: string
+ *                 example: Updated doctor bio
+ *     responses:
+ *       200:
+ *         description: Profile updated successfully
+ *       404:
+ *         description: Doctor profile not found
+ *       500:
+ *         description: Server error
+ */
+
+router.put(
+  "/update/:id",
+  isLoggedIn,
+  authorizeRoles("DOCTOR"),
+  updateDoctorProfile,
+);
 
 module.exports = router;
