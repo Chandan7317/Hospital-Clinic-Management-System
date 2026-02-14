@@ -59,6 +59,7 @@ const getAllDoctor = asyncHandler(async (req, res, next) => {
 
     res.json({
       success: true,
+      message: "Fetch all Doctor Successfully",
       doctors,
     });
   } catch (error) {
@@ -66,8 +67,31 @@ const getAllDoctor = asyncHandler(async (req, res, next) => {
   }
 });
 
+// & -----------------------------getDoctorById-----------------------------
+
 //Get Single Doctor
-const getDoctorById = asyncHandler(async (req, res, next) => {});
+const getDoctorById = asyncHandler(async (req, res, next) => {
+  try {
+    const doctor = await DoctorCollection.findById(req.params.id).populate(
+      "user",
+      "fullName email avatar",
+    );
+
+    if (!doctor) {
+      return res.status(404).json({
+        message: "Doctor not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Fetch Single Doctor Successfully",
+      doctor,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 // Update Doctor Profile (Doctor himself)
 const updateDoctorProfile = asyncHandler(async (req, res, next) => {});
 

@@ -2,6 +2,7 @@ const { Router } = require("express");
 const {
   createDoctor,
   getAllDoctor,
+  getDoctorById,
 } = require("../controllers/doctor.controller");
 
 const router = Router();
@@ -72,5 +73,29 @@ router.post("/createDoctor", createDoctor);
  *         description: Server error
  */
 router.get("/getAllDoctor", getAllDoctor);
+/**
+ * @swagger
+ * /api/v1/doctor/getSingleDoctor/{id}:
+ *   get:
+ *     summary: Get doctor by ID
+ *     tags: [Doctor]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Doctor ID
+ *         schema:
+ *           type: string
+ *           example: 65abc1234567890abcdef123
+ *     responses:
+ *       200:
+ *         description: Doctor fetched successfully
+ *       404:
+ *         description: Doctor not found
+ *       500:
+ *         description: Server error
+ */
+
+router.get("/getSingleDoctor/:id", getDoctorById);
 
 module.exports = router;
