@@ -154,10 +154,28 @@ const DeleteDoctor = asyncHandler(async (req, res, next) => {
   });
 });
 
+// & ----------------------------AdminDeleteDoctor------------------------------------
+
+const adminDeleteDoctor = asyncHandler(async (req, res, next) => {
+  const doctor = await DoctorCollection.findById(req.params.id);
+
+  if (!doctor) {
+    return next(new ErrorHandler("Doctor profile not found", 404));
+  }
+
+  await doctor.deleteOne();
+
+  res.status(200).json({
+    success: true,
+    message: "Doctor deleted by admin",
+  });
+});
+
 module.exports = {
   createDoctor,
   getAllDoctor,
   getDoctorById,
   updateDoctorProfile,
   DeleteDoctor,
+  adminDeleteDoctor,
 };

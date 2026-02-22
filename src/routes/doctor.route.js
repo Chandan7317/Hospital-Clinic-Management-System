@@ -5,6 +5,7 @@ const {
   getDoctorById,
   updateDoctorProfile,
   DeleteDoctor,
+  adminDeleteDoctor,
 } = require("../controllers/doctor.controller");
 const {
   isLoggedIn,
@@ -185,4 +186,32 @@ router.delete(
   DeleteDoctor,
 );
 
+/**
+ * @swagger
+ * /api/v1/doctor/admin/delete/{id}:
+ *   delete:
+ *     summary: Admin delete doctor profile
+ *     tags: [Doctor]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Doctor ID
+ *         schema:
+ *           type: string
+ *           example: 65abc1234567890abcdef123
+ *     responses:
+ *       200:
+ *         description: Doctor deleted by admin
+ *       404:
+ *         description: Doctor profile not found
+ *       500:
+ *         description: Server error
+ */
+router.delete(
+  "/admin/delete/:id",
+  isLoggedIn,
+  authorizeRoles("ADMIN"),
+  adminDeleteDoctor,
+);
 module.exports = router;
