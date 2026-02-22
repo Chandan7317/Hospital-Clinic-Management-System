@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler");
 const UserCollection = require("../models/user.model");
 const DoctorCollection = require("../models/doctor.model");
+const ErrorHandler = require("../utils/ErrorHandler.utils");
 // &-----------------------------createDoctor--------------------
 //  Create Doctor Profile (Admin only)
 const createDoctor = asyncHandler(async (req, res, next) => {
@@ -134,7 +135,24 @@ const updateDoctorProfile = asyncHandler(async (req, res, next) => {
   }
 });
 
-const DeleteDoctor = asyncHandler(async (req, res, next) => {});
+// & ----------------------------DeleteDoctor------------------------------------
+
+const DeleteDoctor = asyncHandler(async (req, res, next) => {
+  const doctor = await DoctorCollection.findOne({
+    user: req.user.id,
+  });
+
+  if (!doctor) {
+    return next(new ErrorHandler("Doctor profile not found", 404));
+  }
+
+  await doctor.deleteOne();
+
+  res.status(200).json({
+    success: true,
+    message: "Doctor profile deleted successfully",
+  });
+});
 
 module.exports = {
   createDoctor,

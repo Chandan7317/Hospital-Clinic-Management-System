@@ -4,6 +4,7 @@ const {
   getAllDoctor,
   getDoctorById,
   updateDoctorProfile,
+  DeleteDoctor,
 } = require("../controllers/doctor.controller");
 const {
   isLoggedIn,
@@ -152,6 +153,36 @@ router.put(
   isLoggedIn,
   authorizeRoles("DOCTOR"),
   updateDoctorProfile,
+);
+
+/**
+ * @swagger
+ * /api/v1/doctor/deleteDoctor/{id}:
+ *   delete:
+ *     summary: Delete doctor profile
+ *     tags: [Doctor]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: Doctor ID
+ *         schema:
+ *           type: string
+ *           example: 65abc1234567890abcdef123
+ *     responses:
+ *       200:
+ *         description: Doctor profile deleted successfully
+ *       404:
+ *         description: Doctor profile not found
+ *       500:
+ *         description: Server error
+ */
+
+router.delete(
+  "/deleteDoctor/:id",
+  isLoggedIn,
+  authorizeRoles("DOCTOR"),
+  DeleteDoctor,
 );
 
 module.exports = router;
