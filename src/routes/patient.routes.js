@@ -1,5 +1,17 @@
 const { Router } = require("express");
+const { isLoggedIn, authorizeRoles } = require("../middlewares/outh.middleware");
+const { createPatientProfile } = require("../controllers/patient.controller");
 
-const app = Router();
+const router= Router();
 
-module.exports = app;
+
+// Patient self routes
+router.post(
+  "/create",
+  isLoggedIn,
+  authorizeRoles("PATIENT"),
+  createPatientProfile
+);
+
+
+module.exports = router;
