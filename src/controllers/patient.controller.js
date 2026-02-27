@@ -52,7 +52,22 @@ const createPatientProfile = asyncHandler(async (req, res, next) => {
 
 // & ---------------------Get My Profile-----------------------
 
-const getMyProfile = asyncHandler(async (req, res, next) => {});
+const getMyProfile = asyncHandler(async (req, res, next) => {
+  const { id: userId } = req.user;
+
+  const patient = await PatientCollection.findOne({
+    user: userId,
+  }).populate("user", "fullName email role avatar");
+
+  if (!patient) {
+    return next(new ErrorHandler("Patient profile not found", 404));
+  }
+
+  res.status(200).json({
+    success: true,
+    patient,
+  });
+});
 
 // & ---------------------Update Patient Profile-----------------------
 

@@ -1,9 +1,14 @@
 const { Router } = require("express");
-const { isLoggedIn, authorizeRoles } = require("../middlewares/outh.middleware");
-const { createPatientProfile } = require("../controllers/patient.controller");
+const {
+  isLoggedIn,
+  authorizeRoles,
+} = require("../middlewares/outh.middleware");
+const {
+  createPatientProfile,
+  getMyProfile,
+} = require("../controllers/patient.controller");
 
-const router= Router();
-
+const router = Router();
 
 // Patient self routes
 /**
@@ -55,8 +60,9 @@ router.post(
   "/create",
   isLoggedIn,
   authorizeRoles("PATIENT"),
-  createPatientProfile
+  createPatientProfile,
 );
 
+router.get("/me", isLoggedIn, authorizeRoles("PATIENT"), getMyProfile);
 
 module.exports = router;
