@@ -71,7 +71,39 @@ const getMyProfile = asyncHandler(async (req, res, next) => {
 
 // & ---------------------Update Patient Profile-----------------------
 
-const updatePatientProfile = asyncHandler(async (req, res, next) => {});
+const updatePatientProfile = asyncHandler(async (req, res, next) => {
+  const { id: userId } = req.user;
+  const patient = await PatientCollection.findOne({
+    user: userId,
+  });
+
+  if (!patient) {
+    return next(new ErrorHandler("Patient profile not found", 404));
+  }
+
+  const allowedFields = [
+    "age",
+    "gender",
+    "bloodGroup",
+    "phone",
+    "address",
+    "medicalHistory",
+  ];
+
+  allowedFields.forEach((field) => {
+    if (req.body[field] !== undefined) {
+      patient[field] = req.body[field];
+    }
+  });
+
+  await patient.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Patient profile updated successfully",
+    patient,
+  });
+});
 
 // & ---------------------Soft Delete Patient-----------------------
 

@@ -6,6 +6,7 @@ const {
 const {
   createPatientProfile,
   getMyProfile,
+  updatePatientProfile,
 } = require("../controllers/patient.controller");
 
 const router = Router();
@@ -79,4 +80,10 @@ router.post(
  */
 router.get("/me", isLoggedIn, authorizeRoles("PATIENT"), getMyProfile);
 
+router.put(
+  "/update",
+  isLoggedIn,
+  authorizeRoles("PATIENT"),
+  updatePatientProfile,
+);
 module.exports = router;
