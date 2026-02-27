@@ -7,8 +7,8 @@ const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
 const userRouter = require("./src/routes/user.route");
 const doctorRoute = require("./src/routes/doctor.route");
-const patientRoute=require("./src/routes/patient.routes")
-
+const patientRoute = require("./src/routes/patient.routes");
+const appointmentRoute = require("./src/routes/appointment.route");
 
 const app = express();
 
@@ -23,6 +23,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use("/api/v1/user", userRouter);
 app.use("/api/v1/doctor", doctorRoute);
 app.use("/api/v1/patient", patientRoute);
+app.use("/api/v1/appointment", appointmentRoute);
 
 //& ─── error middleware ───────────────────────────────────────────────────────────────────
 app.use(errorMiddleware);
