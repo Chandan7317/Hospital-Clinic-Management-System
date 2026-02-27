@@ -80,6 +80,45 @@ router.post(
  */
 router.get("/me", isLoggedIn, authorizeRoles("PATIENT"), getMyProfile);
 
+/**
+ * @swagger
+ * /api/v1/patient/update:
+ *   put:
+ *     summary: Update logged-in patient profile
+ *     tags: [Patient]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               age:
+ *                 type: number
+ *                 example: 30
+ *               gender:
+ *                 type: string
+ *                 example: Male
+ *               bloodGroup:
+ *                 type: string
+ *                 example: A+
+ *               phone:
+ *                 type: string
+ *                 example: 9876543210
+ *               address:
+ *                 type: string
+ *                 example: Delhi, India
+ *               medicalHistory:
+ *                 type: string
+ *                 example: Diabetes since 2020
+ *     responses:
+ *       200:
+ *         description: Patient profile updated successfully
+ *       404:
+ *         description: Patient profile not found
+ *       500:
+ *         description: Server error
+ */
 router.put(
   "/update",
   isLoggedIn,
