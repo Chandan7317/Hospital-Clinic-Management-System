@@ -63,6 +63,20 @@ router.post(
   createPatientProfile,
 );
 
+/**
+ * @swagger
+ * /api/v1/patient/me:
+ *   get:
+ *     summary: Get logged-in patient profile
+ *     tags: [Patient]
+ *     responses:
+ *       200:
+ *         description: Patient profile fetched successfully
+ *       404:
+ *         description: Patient profile not found
+ *       500:
+ *         description: Server error
+ */
 router.get("/me", isLoggedIn, authorizeRoles("PATIENT"), getMyProfile);
 
 module.exports = router;
