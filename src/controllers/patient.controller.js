@@ -129,7 +129,19 @@ const deletePatientProfile = asyncHandler(async (req, res, next) => {
 
 // & ---------------------Admin Get All Patients-----------------------
 
-const getAllPatients = asyncHandler(async (req, res, next) => {});
+const getAllPatients = asyncHandler(async (req, res, next) => {
+  const patients = await PatientCollection.find().populate(
+    "user",
+    "fullName email role",
+  );
+
+  res.status(200).json({
+    success: true,
+    count: patients.length,
+    patients,
+    message: "Fetch All Patient Successfully",
+  });
+});
 
 module.exports = {
   createPatientProfile,

@@ -8,6 +8,7 @@ const {
   getMyProfile,
   updatePatientProfile,
   deletePatientProfile,
+  getAllPatients,
 } = require("../controllers/patient.controller");
 
 const router = Router();
@@ -147,4 +148,7 @@ router.delete(
   authorizeRoles("PATIENT"),
   deletePatientProfile,
 );
+
+// Admin routes
+router.get("/admin/all", isLoggedIn, authorizeRoles("ADMIN"), getAllPatients);
 module.exports = router;
