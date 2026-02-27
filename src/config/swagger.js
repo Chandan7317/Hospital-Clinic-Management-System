@@ -15,16 +15,20 @@ const options = {
     ],
     components: {
       securitySchemes: {
-        cookieAuth: {
-          type: "apiKey",
-          in: "cookie",
-          name: "token",
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
         },
       },
     },
   },
 
-  apis: ["./src/routes/user.route.js", "./src/routes/doctor.route.js" ,"./src/routes/patient.routes.js"], // yaha routes folder ka path dena
+  apis: [
+    "./src/routes/user.route.js",
+    "./src/routes/doctor.route.js",
+    "./src/routes/patient.routes.js",
+  ], // yaha routes folder ka path dena
 };
 
 const swaggerSpec = swaggerJsDoc(options);

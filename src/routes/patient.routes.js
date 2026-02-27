@@ -127,6 +127,20 @@ router.put(
   updatePatientProfile,
 );
 
+/**
+ * @swagger
+ * /api/v1/patient/delete:
+ *   delete:
+ *     summary: Soft delete logged-in patient profile
+ *     tags: [Patient]
+ *     responses:
+ *       200:
+ *         description: Patient profile deleted (Soft Delete)
+ *       404:
+ *         description: Patient profile not found
+ *       500:
+ *         description: Server error
+ */
 router.delete(
   "/delete",
   isLoggedIn,
