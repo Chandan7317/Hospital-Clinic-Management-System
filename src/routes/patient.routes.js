@@ -150,5 +150,18 @@ router.delete(
 );
 
 // Admin routes
+
+/**
+ * @swagger
+ * /api/v1/patient/admin/all:
+ *   get:
+ *     summary: Get all patients (Admin only)
+ *     tags: [Patient]
+ *     responses:
+ *       200:
+ *         description: Fetch all patients successfully
+ *       500:
+ *         description: Server error
+ */
 router.get("/admin/all", isLoggedIn, authorizeRoles("ADMIN"), getAllPatients);
 module.exports = router;
