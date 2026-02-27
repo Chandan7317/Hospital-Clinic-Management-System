@@ -57,10 +57,10 @@ const patientSchema = new mongoose.Schema(
 );
 
 // Automatically hide soft deleted patients
-patientSchema.pre(/^find/, function (next) {
-  this.find({ isDeleted: false });
-  // next();
-});
+// patientSchema.pre(/^find/, function (next) {
+//   this.find({ isDeleted: false });
+//   // next();
+// });
 
 const PatientCollection = mongoose.model("Patient", patientSchema);
 

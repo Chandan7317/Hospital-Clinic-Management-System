@@ -107,7 +107,25 @@ const updatePatientProfile = asyncHandler(async (req, res, next) => {
 
 // & ---------------------Soft Delete Patient-----------------------
 
-const deletePatientProfile = asyncHandler(async (req, res, next) => {});
+const deletePatientProfile = asyncHandler(async (req, res, next) => {
+  const patient = await PatientCollection.findOne({
+    user: req.user.id,
+  });
+
+  if (!patient) {
+    return next(new ErrorHandler("Patient profile not found", 404));
+  }
+
+  patient.isDeleted = true;
+  patient.deletedAt = new Date();
+
+  await patient.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Patient profile deleted (Soft Delete)",
+  });
+});
 
 // & ---------------------Admin Get All Patients-----------------------
 

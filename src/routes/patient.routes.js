@@ -7,6 +7,7 @@ const {
   createPatientProfile,
   getMyProfile,
   updatePatientProfile,
+  deletePatientProfile,
 } = require("../controllers/patient.controller");
 
 const router = Router();
@@ -124,5 +125,12 @@ router.put(
   isLoggedIn,
   authorizeRoles("PATIENT"),
   updatePatientProfile,
+);
+
+router.delete(
+  "/delete",
+  isLoggedIn,
+  authorizeRoles("PATIENT"),
+  deletePatientProfile,
 );
 module.exports = router;
