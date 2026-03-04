@@ -47,4 +47,11 @@ router.put(
 // Common delete
 router.delete("/deleteAppointment/:id", isLoggedIn, deleteAppointment);
 
+// Admin routes
+router.get(
+  "/admin/all/Appointments",
+  isLoggedIn,
+  authorizeRoles("ADMIN"),
+  getAllAppointments,
+);
 module.exports = router;

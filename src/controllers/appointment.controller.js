@@ -154,7 +154,18 @@ const deleteAppointment = asyncHandler(async (req, res, next) => {
 });
 
 // &------------------------- Admin - Get All Appointments----------------------
-const getAllAppointments = asyncHandler(async (req, res, next) => {});
+const getAllAppointments = asyncHandler(async (req, res, next) => {
+  const appointments = await AppointmentCollection.find()
+    .populate("doctor")
+    .populate("patient")
+    .sort({ createdAt: -1 });
+
+  res.status(200).json({
+    success: true,
+    count: appointments.length,
+    appointments,
+  });
+});
 
 module.exports = {
   bookAppointment,
