@@ -31,7 +31,7 @@ const appointmentSchema = new mongoose.Schema(
 
     status: {
       type: String,
-      enum: ["PENDING", "APPROVED", "REJECTED", "COMPLETED"],
+      enum: ["PENDING", "APPROVED", "REJECTED", "CANCELLED", "COMPLETED"],
       default: "PENDING",
     },
 
@@ -48,7 +48,7 @@ const appointmentSchema = new mongoose.Schema(
 // Hide soft deleted appointments
 appointmentSchema.pre(/^find/, function (next) {
   this.find({ isDeleted: false });
-//   next();
+  //   next();
 });
 
 const AppointmentCollection = mongoose.model("appointment", appointmentSchema);

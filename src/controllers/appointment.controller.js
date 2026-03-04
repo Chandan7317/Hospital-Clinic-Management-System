@@ -96,7 +96,10 @@ const getDoctorAppointments = asyncHandler(async (req, res, next) => {
     doctor: doctor._id,
   })
     .populate("patient", "age gender bloodGroup")
-    .populate("doctor", "specialization experience consultationFee qualification bio")
+    .populate(
+      "doctor",
+      "specialization experience consultationFee qualification bio",
+    )
     .sort({ appointmentDate: -1 });
 
   res.status(200).json({
@@ -109,7 +112,25 @@ const getDoctorAppointments = asyncHandler(async (req, res, next) => {
 
 // &-------------------------Doctor Update Appointment Status----------------------
 
-const updateAppointmentStatus = asyncHandler(async (req, res, next) => {});
+const updateAppointmentStatus = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  const appointment = await AppointmentCollection.findById(id);
+
+  if (!appointment) {
+    return next(new ErrorHandler("Appointment not found", 404));
+  }
+
+  appointment.status = status;
+
+  await appointment.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Appointment status updated",
+    appointment,
+  });
+});
 
 // &-------------------------Soft Delete Appointment----------------------
 

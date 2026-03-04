@@ -1,5 +1,10 @@
 const { Router } = require("express");
-const { bookAppointment, getMyAppointments, getDoctorAppointments } = require("../controllers/appointment.controller");
+const {
+  bookAppointment,
+  getMyAppointments,
+  getDoctorAppointments,
+  updateAppointmentStatus,
+} = require("../controllers/appointment.controller");
 const {
   isLoggedIn,
   authorizeRoles,
@@ -12,14 +17,14 @@ router.post(
   "/bookApointment",
   isLoggedIn,
   authorizeRoles("PATIENT"),
-  bookAppointment
+  bookAppointment,
 );
 
 router.get(
   "/myApointment",
   isLoggedIn,
   authorizeRoles("PATIENT"),
-  getMyAppointments
+  getMyAppointments,
 );
 
 // Doctor routes
@@ -27,6 +32,14 @@ router.get(
   "/viewdoctorAppointment",
   isLoggedIn,
   authorizeRoles("DOCTOR"),
-  getDoctorAppointments
+  getDoctorAppointments,
 );
+
+router.put(
+  "/doctor/update/Appointment/status/:id",
+  isLoggedIn,
+  authorizeRoles("DOCTOR"),
+  updateAppointmentStatus,
+);
+
 module.exports = router;
