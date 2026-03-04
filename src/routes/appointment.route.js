@@ -4,6 +4,8 @@ const {
   getMyAppointments,
   getDoctorAppointments,
   updateAppointmentStatus,
+  getAllAppointments,
+  deleteAppointment,
 } = require("../controllers/appointment.controller");
 const {
   isLoggedIn,
@@ -41,5 +43,8 @@ router.put(
   authorizeRoles("DOCTOR"),
   updateAppointmentStatus,
 );
+
+// Common delete
+router.delete("/deleteAppointment/:id", isLoggedIn, deleteAppointment);
 
 module.exports = router;

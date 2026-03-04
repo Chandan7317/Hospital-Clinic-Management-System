@@ -134,7 +134,24 @@ const updateAppointmentStatus = asyncHandler(async (req, res, next) => {
 
 // &-------------------------Soft Delete Appointment----------------------
 
-const deleteAppointment = asyncHandler(async (req, res, next) => {});
+const deleteAppointment = asyncHandler(async (req, res, next) => {
+  const appointment = await AppointmentCollection.findById(req.params.id);
+
+  if (!appointment) {
+    return next(new ErrorHandler("Appointment not found", 404));
+  }
+
+  appointment.isDeleted = true;
+  appointment.deletedAt = new Date();
+
+  await appointment.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Appointment deleted (Soft)",
+    data: appointment,
+  });
+});
 
 // &------------------------- Admin - Get All Appointments----------------------
 const getAllAppointments = asyncHandler(async (req, res, next) => {});
