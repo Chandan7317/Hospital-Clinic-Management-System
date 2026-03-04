@@ -31,7 +31,7 @@ const createDoctor = asyncHandler(async (req, res, next) => {
     }
 
     const doctor = await DoctorCollection.create({
-      user: userId,
+      userId: userId,
       specialization,
       experience,
       consultationFee,

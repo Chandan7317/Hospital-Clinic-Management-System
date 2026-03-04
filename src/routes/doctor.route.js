@@ -62,7 +62,7 @@ const router = Router();
  *       201:
  *         description: Doctor profile created successfully
  *       400:
- *         description: User must have DOCTOR role or profile already exists
+ *         description: User must have ADMIN role or profile already exists
  *       500:
  *         description: Internal server error
  */
