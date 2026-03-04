@@ -24,7 +24,7 @@ router.get(
 
 // Doctor routes
 router.get(
-  "/getdoctorAppointment",
+  "/viewdoctorAppointment",
   isLoggedIn,
   authorizeRoles("DOCTOR"),
   getDoctorAppointments

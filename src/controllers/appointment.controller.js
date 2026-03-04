@@ -89,7 +89,23 @@ const getMyAppointments = asyncHandler(async (req, res, next) => {
 
 // &-------------------------Doctor View Appointments----------------------
 
-const getDoctorAppointments = asyncHandler(async (req, res, next) => {});
+const getDoctorAppointments = asyncHandler(async (req, res, next) => {
+  const doctor = await DoctorCollection.findOne({ user: req.user._id });
+
+  const appointments = await AppointmentCollection.find({
+    doctor: doctor._id,
+  })
+    .populate("patient", "age gender bloodGroup")
+    .populate("doctor", "specialization experience consultationFee qualification bio")
+    .sort({ appointmentDate: -1 });
+
+  res.status(200).json({
+    success: true,
+    count: appointments.length,
+    appointments,
+    message: "Doctor View Appointments Successfully",
+  });
+});
 
 // &-------------------------Doctor Update Appointment Status----------------------
 

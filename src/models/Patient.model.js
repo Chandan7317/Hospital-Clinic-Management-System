@@ -62,6 +62,6 @@ const patientSchema = new mongoose.Schema(
 //   // next();
 // });
 
-const PatientCollection = mongoose.model("Patient", patientSchema);
+const PatientCollection = mongoose.model("patient", patientSchema);
 
 module.exports = PatientCollection;
