@@ -28,6 +28,7 @@ const options = {
     "./src/routes/user.route.js",
     "./src/routes/doctor.route.js",
     "./src/routes/patient.routes.js",
+    "./src/routes/appointment.route.js",
   ], // yaha routes folder ka path dena
 };
 
