@@ -10,7 +10,7 @@ const {
   updateUser,
 } = require("../controllers/user.controller");
 const upload = require("../middlewares/multer.middleware");
-const { isLoggedIn } = require("../middlewares/outh.middleware");
+const { isLoggedIn } = require("../middlewares/auth.middleware");
 
 const router = Router();
 

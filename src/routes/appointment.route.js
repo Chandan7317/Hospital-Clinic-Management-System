@@ -10,7 +10,7 @@ const {
 const {
   isLoggedIn,
   authorizeRoles,
-} = require("../middlewares/outh.middleware");
+} = require("../middlewares/auth.middleware");
 
 const router = Router();
 

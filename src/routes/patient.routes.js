@@ -2,7 +2,7 @@ const { Router } = require("express");
 const {
   isLoggedIn,
   authorizeRoles,
-} = require("../middlewares/outh.middleware");
+} = require("../middlewares/auth.middleware");
 const {
   createPatientProfile,
   getMyProfile,
