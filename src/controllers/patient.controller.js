@@ -34,7 +34,7 @@ const createPatientProfile = asyncHandler(async (req, res, next) => {
   }
 
   const patient = await PatientCollection.create({
-    user: userId,
+    userId: userId,
     age,
     gender,
     bloodGroup,

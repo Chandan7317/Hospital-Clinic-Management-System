@@ -2,19 +2,19 @@ const mongoose = require("mongoose");
 
 const medicalRecordSchema = new mongoose.Schema(
     {
-        patient: {
+        patientId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "patient",
             required: true
         },
 
-        doctor: {
+        doctorId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "doctor",
             required: true
         },
 
-        appointment: {
+        appointmentId: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "appointment"
         },
@@ -59,4 +59,5 @@ medicalRecordSchema.pre(/^find/, function (next) {
     //   next();
 });
 
-module.exports = mongoose.model("MedicalRecord", medicalRecordSchema);
+const MedicalRecordCollection = mongoose.model("MedicalRecord", medicalRecordSchema);
+module.exports = MedicalRecordCollection

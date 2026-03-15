@@ -39,7 +39,7 @@ const bookAppointment = asyncHandler(async (req, res, next) => {
 
   // 5️ Check if Slot Already Booked
   const existingAppointment = await AppointmentCollection.findOne({
-    doctor: doctorId,
+    doctorId: doctorId,
     appointmentDate,
     timeSlot,
     status: { $ne: "cancelled" },
