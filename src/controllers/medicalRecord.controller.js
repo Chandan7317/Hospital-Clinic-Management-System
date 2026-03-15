@@ -36,6 +36,21 @@ const addDiagnosis = asyncHandler(async (req, res, next) => {
 // & ---------------------------Add Prescription------------------------
 
 const addPrescription = asyncHandler(async (req, res, next) => {
+    const record = await MedicalRecordCollection.findById(req.params.id);
+
+    if (!record) {
+        return next(new ErrorHandler("Medical record not found", 404));
+    }
+
+    record.prescription.push(...req.body.prescription);
+
+    await record.save();
+
+    res.status(200).json({
+        success: true,
+        message: "Prescription added successfully",
+        record
+    });
 })
 
 // & ---------------------------Upload Medical Reports------------------------
